@@ -111,12 +111,12 @@ export default function WeatherDashboard() {
 
       <div className="mt-12 p-4 bg-slate-800/50 rounded-lg text-center text-sm text-slate-400 max-w-xl">
         <p>
-          <strong>Note:</strong> This is a demo application using mock weather data.
+          <strong>Note:</strong> This is a demo application using real weather data.
         </p>
-        <p>
+        {/* <p>
           To use real weather data, you need to sign up for an API key from a provider like OpenWeatherMap and update
           the <code>lib/weather-service.ts</code> file.
-        </p>
+        </p> */}
       </div>
     </div>
   )
