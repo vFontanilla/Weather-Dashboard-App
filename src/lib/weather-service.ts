@@ -1,4 +1,4 @@
-import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coordinates } from "@/types/weather"
+import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coordinates, CitySuggestion } from "@/types/weather"
 
 const API_KEY = "0f9c2683d94b41429e8132352250606"
 const BASE_URL = "https://api.weatherapi.com/v1"
@@ -37,7 +37,7 @@ export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWe
     },
     name: data.location.name,
     // timezone: new Date(data.location.localtime).getTimezoneOffset() * -60,
-    timezone: data.location.localtime,
+    localtime: data.location.localtime,
   }
 }
 
@@ -129,7 +129,7 @@ export async function fetchWeatherByCoords(
       country: data.location.country,
     },
     name: data.location.name,
-    timezone: data.location.localtime,
+    localtime: data.location.localtime,
   }
 
   const hourlyData = data.forecast.forecastday[0].hour.slice(0, 8)
@@ -176,6 +176,19 @@ export async function fetchWeatherByCoords(
 
   return { current, forecast }
 }
+
+export async function fetchAutocompleteWeatherByCity(city: string): Promise<CitySuggestion[]> {
+  const response = await fetch(`${BASE_URL}/search.json?key=${API_KEY}&q=${encodeURIComponent(city)}`)
+  const data = await response.json()
+  return data.map((item: any) => ({
+    name: item.name,
+    lat: item.lat,
+    lon: item.lon,
+    region: item.region,
+    country: item.country,
+  }))
+}
+
 
 // In a real application, you would use fetch like this:
 // export async function fetchCurrentWeatherByCityReal(city: string): Promise<CurrentWeatherResponse> {

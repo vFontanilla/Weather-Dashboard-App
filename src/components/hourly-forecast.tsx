@@ -1,11 +1,11 @@
 "use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart"
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
-import type { HourlyForecastResponse } from "@/types/weather"
 import { Clock } from "lucide-react"
+import type { HourlyForecastResponse } from "@/types/weather"
 
-interface HourlyForecastProps {
+interface HourlyWeatherProps {
   data: HourlyForecastResponse | null
 }
 
@@ -14,23 +14,33 @@ const chartConfig = {
     label: "Temp (°C)",
     color: "hsl(var(--chart-1))",
   },
-} satisfies ChartConfig
-
-// Helper to format timestamp to local hour string
-const formatHour = (timestamp: number, timezoneOffset: number): string => {
-  const date = new Date((timestamp + timezoneOffset) * 1000)
-  return date.toLocaleTimeString("en-US", { hour: "numeric", hour12: true, timeZone: "UTC" })
 }
 
-export default function HourlyForecast({ data }: HourlyForecastProps) {
+// Format UNIX timestamp + timezoneOffset to local hour string (e.g., "3 PM")
+const formatHour = (timestamp: number, timezoneOffset: number): string => {
+  const date = new Date((timestamp + timezoneOffset) * 1000)
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    hour12: true,
+    timeZone: "UTC",
+  })
+}
+
+export default function CurrentWeather({ data }: HourlyWeatherProps) {
   if (!data || !data.list || data.list.length === 0) return null
 
-  const chartData = data.list.slice(0, 8).map((item) => ({
-    // Show next 24 hours (8 entries * 3 hours)
-    time: formatHour(item.dt, data.city.timezone),
-    temperature: Math.round(item.main.temp),
-    icon: item.weather[0]?.icon,
-    description: item.weather[0]?.description,
+  const timezoneOffset = data.city.timezone || 0
+  const now = Date.now() / 1000 // current time in seconds
+
+  // Get the next 8 future 3-hour interval forecasts (approx. 24 hours)
+  const chartData = data.list
+    .filter((item) => item.dt >= now)
+    .slice(0, 8)
+    .map((item) => ({
+      time: formatHour(item.dt, timezoneOffset),
+      temperature: Math.round(item.main.temp),
+      icon: item.weather?.[0]?.icon ?? "",
+      description: item.weather?.[0]?.description ?? "",
   }))
 
   return (

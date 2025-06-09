@@ -6,8 +6,8 @@ import CurrentWeather from "./current-weather"
 import HourlyForecast from "./hourly-forecast"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { AlertTriangle, Info, Loader2 } from "lucide-react"
-import { fetchCurrentWeatherByCity, fetchHourlyForecastByCity, fetchWeatherByCoords } from "@/lib/weather-service"
-import type { CurrentWeatherResponse, HourlyForecastResponse, Coordinates } from "@/types/weather"
+import { fetchCurrentWeatherByCity, fetchHourlyForecastByCity, fetchWeatherByCoords, fetchAutocompleteWeatherByCity } from "@/lib/weather-service"
+import type { CurrentWeatherResponse, HourlyForecastResponse, Coordinates, CitySuggestion } from "@/types/weather"
 
 export default function WeatherDashboard() {
   const [currentWeather, setCurrentWeather] = useState<CurrentWeatherResponse | null>(null)
@@ -15,6 +15,7 @@ export default function WeatherDashboard() {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [geoError, setGeoError] = useState<string | null>(null)
+  const [suggestions, setSuggestions] = useState<CitySuggestion[]>([])
 
   const fetchWeatherData = useCallback(async (city?: string, coords?: Coordinates) => {
     setLoading(true)
@@ -72,13 +73,18 @@ export default function WeatherDashboard() {
     fetchWeatherData("London")
   }, [fetchWeatherData])
 
+  const handleAutocomplete = async (query: string) => {
+    const results = await fetchAutocompleteWeatherByCity(query)
+    setSuggestions(results)
+  }
+
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col items-center w-full">
       <h1 className="text-4xl font-bold mb-8 text-center bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-blue-500">
         Track the Weather Today in Just a Few Minutes
       </h1>
 
-      <SearchBar onSearch={handleSearch} onGeolocate={handleGeolocate} loading={loading} />
+      <SearchBar onSearch={handleSearch} onGeolocate={handleGeolocate} loading={loading} onAutocomplete={handleAutocomplete} suggestions={suggestions} setSuggestions={setSuggestions} showSuggestions={suggestions.length > 0}/>
 
       {loading && (
         <div className="flex items-center justify-center my-10 text-xl">

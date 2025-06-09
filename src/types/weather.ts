@@ -27,7 +27,6 @@ export interface SysData {
   country?: string
   sunrise?: number
   sunset?: number
-  localtime?: number
 }
 
 export interface CurrentWeatherResponse {
@@ -38,7 +37,7 @@ export interface CurrentWeatherResponse {
   dt: number
   sys: SysData
   name: string
-  timezone: string
+  localtime: string
 }
 
 export interface ForecastEntry {
@@ -56,8 +55,18 @@ export interface HourlyForecastResponse {
     name: string
     coord: Coordinates
     country: string
-    timezone: string
+    timezone: number
     sunrise: number
     sunset: number
   }
 }
+
+export interface CitySuggestion {
+  id: number
+  name: string
+  region: string
+  country: string
+  lat: number
+  lon: number
+}
+

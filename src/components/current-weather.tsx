@@ -58,7 +58,7 @@ const formatLocaltime = (localtime: string): string => {
 export default function CurrentWeather({ data, data2 }: CurrentWeatherProps) {
   if (!data || !data2) return null
 
-  const { name, main, weather, wind, timezone, sys } = data
+  const { name, main, weather, wind, localtime, sys } = data
   const { city: { sunrise, sunset } } = data2
   const weatherIcon = weather[0]?.icon
   const iconUrl = weatherIcon
@@ -74,7 +74,7 @@ export default function CurrentWeather({ data, data2 }: CurrentWeatherProps) {
             <CardDescription className="text-slate-400 flex flex-col sm:flex-row sm:items-center gap-x-2">
               <span className="flex items-center">
                 <CalendarDays className="mr-1.5 h-4 w-4" />
-                {formatLocaltime(timezone)}
+                {formatLocaltime(localtime)}
               </span>
             </CardDescription>
           </div>
