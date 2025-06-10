@@ -12,7 +12,7 @@ interface HourlyWeatherProps {
 const chartConfig = {
   temperature: {
     label: "Temp (°C)",
-    color: "hsl(var(--chart-1))",
+    color: "hsl(0, 100%, 60%)",
   },
 }
 
@@ -96,7 +96,7 @@ export default function CurrentWeather({ data }: HourlyWeatherProps) {
                           </div>
                         )
                       }}
-                      className="bg-slate-900 text-white border-slate-700"
+                      className="bg-white text-black border-slate-700"
                     />
                   }
                 />
