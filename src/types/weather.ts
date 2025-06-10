@@ -25,8 +25,8 @@ export interface Coordinates {
 
 export interface SysData {
   country?: string
-  sunrise?: number
-  sunset?: number
+  sunrise?: string
+  sunset?: string
 }
 
 export interface CurrentWeatherResponse {
@@ -56,8 +56,8 @@ export interface HourlyForecastResponse {
     coord: Coordinates
     country: string
     timezone: number
-    sunrise: number
-    sunset: number
+    sunrise: string
+    sunset: string
   }
 }
 

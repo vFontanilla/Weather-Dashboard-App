@@ -18,6 +18,10 @@ const chartConfig = {
 
 // Format UNIX timestamp + timezoneOffset to local hour string (e.g., "3 PM")
 const formatHour = (timestamp: number, timezoneOffset: number): string => {
+  if (!timestamp || !Number.isFinite(timezoneOffset)) {
+    return "N/A";
+  }
+
   const date = new Date((timestamp + timezoneOffset) * 1000)
   return date.toLocaleTimeString("en-US", {
     hour: "numeric",
@@ -41,7 +45,7 @@ export default function CurrentWeather({ data }: HourlyWeatherProps) {
       temperature: Math.round(item.main.temp),
       icon: item.weather?.[0]?.icon ?? "",
       description: item.weather?.[0]?.description ?? "",
-  }))
+  }));
 
   return (
     <Card className="w-full max-w-4xl bg-slate-800/70 border-slate-700 text-white shadow-xl">
@@ -81,7 +85,7 @@ export default function CurrentWeather({ data }: HourlyWeatherProps) {
                           <div className="flex items-center">
                             {item?.icon && (
                               <img
-                                src={`https://openweathermap.org/img/wn/${item.icon}.png`}
+                                src={item.icon}
                                 alt={item.description || "weather icon"}
                                 width={24}
                                 height={24}
@@ -115,7 +119,7 @@ export default function CurrentWeather({ data }: HourlyWeatherProps) {
               <p className="font-medium">{item.time}</p>
               {item.icon && (
                 <img
-                  src={`https://openweathermap.org/img/wn/${item.icon}@2x.png`}
+                  src={item.icon}
                   alt={item.description || "weather icon"}
                   width={40}
                   height={40}
@@ -127,5 +131,5 @@ export default function CurrentWeather({ data }: HourlyWeatherProps) {
         </div>
       </CardContent>
     </Card>
-  )
+  );
 }

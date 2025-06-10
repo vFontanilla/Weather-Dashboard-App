@@ -1,10 +1,17 @@
+import { getTimezoneOffset } from 'date-fns-tz';
 import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coordinates, CitySuggestion } from "@/types/weather"
 
-const API_KEY = "0f9c2683d94b41429e8132352250606"
+const API_KEY = import.meta.env.VITE_WEATHER_API_KEY || ''
 const BASE_URL = "https://api.weatherapi.com/v1"
 
 export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWeatherResponse> {
-  const response = await fetch(`${BASE_URL}/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}`)
+  const response = await fetch(`${BASE_URL}/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}`);
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || 'Failed to fetch current weather');
+  }
+
   const data = await response.json()
 
   console.log(data);
@@ -44,7 +51,13 @@ export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWe
 export async function fetchHourlyForecastByCity(city: string): Promise<HourlyForecastResponse> {
   const response = await fetch(
     `${BASE_URL}/forecast.json?key=${API_KEY}&q=${city}&days=1&aqi=no&alerts=no`
-  )
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || 'Failed to fetch hourly forecast');
+  }
+
   const data = await response.json()
 
   const forecastDay = data.forecast.forecastday[0]
@@ -72,6 +85,9 @@ export async function fetchHourlyForecastByCity(city: string): Promise<HourlyFor
     dt_txt: entry.time,
   }))
 
+  // Calculate timezone offset in seconds using tz_id
+  const timezoneOffset = getTimezoneOffset(data.location.tz_id, new Date()) / 1000;
+
   return {
     list,
     city: {
@@ -81,8 +97,7 @@ export async function fetchHourlyForecastByCity(city: string): Promise<HourlyFor
         lat: data.location.lat,
       },
       country: data.location.country,
-      // timezone: new Date(data.location.localtime).getTimezoneOffset() * -60,
-      timezone: data.location.localtime,
+      timezone: timezoneOffset,
       sunrise: forecastDay.astro.sunrise,
       sunset: forecastDay.astro.sunset,
     },
@@ -95,7 +110,13 @@ export async function fetchWeatherByCoords(
   const { lat, lon } = coords
   const response = await fetch(
     `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=1&aqi=no&alerts=no`
-  )
+  );
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || 'Failed to fetch weather by coords');
+  }
+
   const data = await response.json()
 
   const forecastDay = data.forecast.forecastday[0]
@@ -157,7 +178,10 @@ export async function fetchWeatherByCoords(
     },
     pop: hour.chance_of_rain ? hour.chance_of_rain / 100 : 0,
     dt_txt: hour.time,
-  }))
+  }));
+
+   // Calculate timezone offset in seconds using tz_id
+  const timezoneOffset = getTimezoneOffset(data.location.tz_id, new Date()) / 1000;
 
   const forecast: HourlyForecastResponse = {
     list: forecastList,
@@ -168,7 +192,7 @@ export async function fetchWeatherByCoords(
         lon: data.location.lon,
       },
       country: data.location.country,
-      timezone: data.location.localtime,
+      timezone: timezoneOffset,
       sunrise: forecastDay.astro.sunrise,
       sunset: forecastDay.astro.sunset,
     },
@@ -178,7 +202,13 @@ export async function fetchWeatherByCoords(
 }
 
 export async function fetchAutocompleteWeatherByCity(city: string): Promise<CitySuggestion[]> {
-  const response = await fetch(`${BASE_URL}/search.json?key=${API_KEY}&q=${encodeURIComponent(city)}`)
+  const response = await fetch(`${BASE_URL}/search.json?key=${API_KEY}&q=${encodeURIComponent(city)}`);
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error?.message || 'Failed to fetch city suggestions');
+  }
+
   const data = await response.json()
   return data.map((item: any) => ({
     name: item.name,
