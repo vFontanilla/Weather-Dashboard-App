@@ -4,6 +4,8 @@ import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coo
 const API_KEY = import.meta.env.VITE_WEATHER_API_KEY || ''
 const BASE_URL = "https://api.weatherapi.com/v1"
 
+// const BASE_URL = "/api/weather";
+
 export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWeatherResponse> {
   const response = await fetch(`${BASE_URL}/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}`);
 
