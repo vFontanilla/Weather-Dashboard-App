@@ -7,7 +7,9 @@ const BASE_URL = "https://api.weatherapi.com/v1"
 // const BASE_URL = "/api/weather";
 
 export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWeatherResponse> {
-  const response = await fetch(`${BASE_URL}/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}`);
+  // const response = await fetch(`${BASE_URL}/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}`);
+
+  const response = await fetch(`/api/weather?q=${encodeURIComponent(city)}`);
 
   if (!response.ok) {
     const errorData = await response.json();
