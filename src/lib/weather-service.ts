@@ -1,8 +1,8 @@
 import { getTimezoneOffset } from 'date-fns-tz';
 import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coordinates, CitySuggestion } from "@/types/weather"
 
-const API_KEY = import.meta.env.VITE_WEATHER_API_KEY || ''
-const BASE_URL = "https://api.weatherapi.com/v1"
+// const API_KEY = import.meta.env.VITE_WEATHER_API_KEY || ''
+// const BASE_URL = "https://api.weatherapi.com/v1"
 
 // const BASE_URL = "/api/weather";
 
@@ -54,7 +54,7 @@ export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWe
 
 export async function fetchHourlyForecastByCity(city: string): Promise<HourlyForecastResponse> {
   const response = await fetch(
-    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${city}&days=1&aqi=no&alerts=no`
+    `/api/weather?q=${encodeURIComponent(city)}&days=1&aqi=no&alerts=no`
   );
 
   if (!response.ok) {
@@ -113,7 +113,7 @@ export async function fetchWeatherByCoords(
 ): Promise<{ current: CurrentWeatherResponse; forecast: HourlyForecastResponse }> {
   const { lat, lon } = coords
   const response = await fetch(
-    `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=1&aqi=no&alerts=no`
+    `/api/weather?q=${lat},${lon}&days=1&aqi=no&alerts=no`
   );
 
   if (!response.ok) {
@@ -206,7 +206,7 @@ export async function fetchWeatherByCoords(
 }
 
 export async function fetchAutocompleteWeatherByCity(city: string): Promise<CitySuggestion[]> {
-  const response = await fetch(`${BASE_URL}/search.json?key=${API_KEY}&q=${encodeURIComponent(city)}`);
+  const response = await fetch(`/api/weather?q=${encodeURIComponent(city)}q=${encodeURIComponent(city)}`);
 
   if (!response.ok) {
     const errorData = await response.json();
