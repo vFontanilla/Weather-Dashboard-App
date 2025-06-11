@@ -2,10 +2,12 @@ import { getTimezoneOffset } from "date-fns-tz";
 import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coordinates, CitySuggestion } from "@/types/weather";
 
 // Update with your Vercel deployment URL
-const BASE_URL = "https://weather-dashboard-app-amber.vercel.app/api/weather";
+// const BASE_URL = "https://weather-dashboard-app-amber.vercel.app/api/weather";
+const BASE_URL = "https://api.weatherapi.com/v1";
+const API_KEY = "0f9c2683d94b41429e8132352250606";
 
 export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWeatherResponse> {
-  const url = `${BASE_URL}/current?q=${encodeURIComponent(city)}`;
+  const url = `${BASE_URL}/current.json?key=${API_KEY}&q=${encodeURIComponent(city)}`;
   console.log("Fetching current weather from:", url);
   const response = await fetch(url);
   if (!response.ok) {
@@ -30,7 +32,7 @@ export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWe
 }
 
 export async function fetchHourlyForecastByCity(city: string): Promise<HourlyForecastResponse> {
-  const url = `${BASE_URL}/forecast?q=${encodeURIComponent(city)}&days=1&aqi=no&alerts=no`;
+  const url = `${BASE_URL}/forecast.json?key="${API_KEY}"&q=${encodeURIComponent(city)}&days=1&aqi=no&alerts=no`;
   console.log("Fetching forecast from:", url);
   const response = await fetch(url);
   if (!response.ok) {
@@ -63,7 +65,7 @@ export async function fetchHourlyForecastByCity(city: string): Promise<HourlyFor
 }
 
 export async function fetchAutocompleteWeatherByCity(city: string): Promise<CitySuggestion[]> {
-  const url = `${BASE_URL}/search?q=${encodeURIComponent(city)}`;
+  const url = `${BASE_URL}/search.json?key=${API_KEY}&q=${encodeURIComponent(city)}`;
   console.log("Fetching autocomplete from:", url);
   const response = await fetch(url);
   if (!response.ok) {
@@ -87,7 +89,7 @@ export async function fetchAutocompleteWeatherByCity(city: string): Promise<City
 
 export async function fetchWeatherByCoords(coords: Coordinates): Promise<{ current: CurrentWeatherResponse; forecast: HourlyForecastResponse }> {
   const { lat, lon } = coords;
-  const url = `${BASE_URL}/forecast?q=${lat},${lon}&days=1&aqi=no&alerts=no`;
+  const url = `${BASE_URL}/forecast.json?key=${API_KEY}&q=${lat},${lon}&days=1&aqi=no&alerts=no`;
   console.log("Fetching weather by coords from:", url);
   const response = await fetch(url);
   if (!response.ok) {
