@@ -2,7 +2,7 @@ import { getTimezoneOffset } from "date-fns-tz";
 import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coordinates, CitySuggestion } from "@/types/weather";
 
 // Update with your Vercel deployment URL
-const BASE_URL = "https://your-app.vercel.app/api/weather";
+const BASE_URL = "https://weather-dashboard-app-amber.vercel.app/api/weather";
 
 export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWeatherResponse> {
   const url = `${BASE_URL}?q=${encodeURIComponent(city)}`;
