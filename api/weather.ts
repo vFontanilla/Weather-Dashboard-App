@@ -12,24 +12,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   // Determine endpoint based on path
-  const path = req.url?.split("/api/weather")[1] || "";
-  let endpoint = "current.json"; // Default endpoint
-  if (path.includes("forecast")) endpoint = "forecast.json";
-  if (path.includes("search")) endpoint = "search.json";
+  const path = req.url?.split("/api/weather")[1] || "/current";
+  let endpoint = "/v1/current.json";
+  if (path.startsWith("/forecast")) endpoint = "/v1/forecast.json";
+  if (path.startsWith("/search")) endpoint = "/v1/search.json";
 
-  // Build query parameters based on endpoint
+  // Build query parameters
   const queryParams = new URLSearchParams({
     key: apiKey,
     q: q as string,
   });
-  if (endpoint === "forecast.json") {
+  if (endpoint === "/v1/forecast.json") {
     queryParams.append("days", days as string);
     queryParams.append("aqi", aqi as string);
     queryParams.append("alerts", alerts as string);
   }
 
   try {
-    const response = await fetch(`https://api.weatherapi.com/v1/${endpoint}?${queryParams}`);
+    const response = await fetch(`https://api.weatherapi.com${endpoint}?${queryParams}`);
     const data = await response.text(); // Get raw text for debugging
     console.log(`Raw response from ${endpoint}:`, data);
 

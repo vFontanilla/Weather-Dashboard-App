@@ -5,7 +5,7 @@ import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coo
 const BASE_URL = "https://weather-dashboard-app-amber.vercel.app/api/weather";
 
 export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWeatherResponse> {
-  const url = `${BASE_URL}?q=${encodeURIComponent(city)}`;
+  const url = `${BASE_URL}/current?q=${encodeURIComponent(city)}`;
   console.log("Fetching current weather from:", url);
   const response = await fetch(url);
   if (!response.ok) {
