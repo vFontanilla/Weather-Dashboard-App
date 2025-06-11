@@ -47,6 +47,8 @@ export default function CurrentWeather({ data }: HourlyWeatherProps) {
       description: item.weather?.[0]?.description ?? "",
   }));
 
+  console.log("Chart Data:", chartData)
+
   return (
     <Card className="w-full max-w-4xl bg-slate-800/70 border-slate-700 text-white shadow-xl">
       <CardHeader>
