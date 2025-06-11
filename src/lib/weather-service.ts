@@ -32,7 +32,7 @@ export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWe
 }
 
 export async function fetchHourlyForecastByCity(city: string): Promise<HourlyForecastResponse> {
-  const url = `${BASE_URL}/forecast.json?key="${API_KEY}"&q=${encodeURIComponent(city)}&days=1&aqi=no&alerts=no`;
+  const url = `${BASE_URL}/forecast.json?key=${API_KEY}&q=${encodeURIComponent(city)}&days=1&aqi=no&alerts=no`;
   console.log("Fetching forecast from:", url);
   const response = await fetch(url);
   if (!response.ok) {
