@@ -1,10 +1,8 @@
 import { getTimezoneOffset } from "date-fns-tz";
 import type { CurrentWeatherResponse, HourlyForecastResponse, ForecastEntry, Coordinates, CitySuggestion } from "@/types/weather";
 
-// Update with your Vercel deployment URL
+// Use the proxy endpoint
 const BASE_URL = "/api/weather";
-// const BASE_URL = "https://api.weatherapi.com/v1";
-// const API_KEY = "0f9c2683d94b41429e8132352250606";
 
 export async function fetchCurrentWeatherByCity(city: string): Promise<CurrentWeatherResponse> {
   const url = `${BASE_URL}?endpoint=current&city=${encodeURIComponent(city)}`;
@@ -65,7 +63,7 @@ export async function fetchHourlyForecastByCity(city: string): Promise<HourlyFor
 }
 
 export async function fetchAutocompleteWeatherByCity(city: string): Promise<CitySuggestion[]> {
-  const url = `${BASE_URL}?endpoint=current&city=${encodeURIComponent(city)}`;
+  const url = `${BASE_URL}?endpoint=search&city=${encodeURIComponent(city)}`;
   console.log("Fetching autocomplete from:", url);
   const response = await fetch(url);
   if (!response.ok) {
@@ -89,7 +87,7 @@ export async function fetchAutocompleteWeatherByCity(city: string): Promise<City
 
 export async function fetchWeatherByCoords(coords: Coordinates): Promise<{ current: CurrentWeatherResponse; forecast: HourlyForecastResponse }> {
   const { lat, lon } = coords;
-  const url = `${BASE_URL}?endpoint=current&q=${lat},${lon}&days=1&aqi=no&alerts=no`;
+  const url = `${BASE_URL}?endpoint=forecast&lat=${lat}&lon=${lon}&days=1&aqi=no&alerts=no`;
   console.log("Fetching weather by coords from:", url);
   const response = await fetch(url);
   if (!response.ok) {
