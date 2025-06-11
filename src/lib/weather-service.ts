@@ -64,7 +64,7 @@ export async function fetchHourlyForecastByCity(city: string): Promise<HourlyFor
 }
 
 export async function fetchAutocompleteWeatherByCity(city: string): Promise<CitySuggestion[]> {
-  const url = `${BASE_URL}search.json?key=${API_KEY}&q=${encodeURIComponent(city)}`;
+  const url = `${BASE_URL}/search.json?key=${API_KEY}&q=${encodeURIComponent(city)}`;
   console.log("Fetching autocomplete from:", url);
   const response = await fetch(url);
   if (!response.ok) {
@@ -88,7 +88,7 @@ export async function fetchAutocompleteWeatherByCity(city: string): Promise<City
 
 export async function fetchWeatherByCoords(coords: Coordinates): Promise<{ current: CurrentWeatherResponse; forecast: HourlyForecastResponse }> {
   const { lat, lon } = coords;
-  const url = `${BASE_URL}.forecast.json?key=${API_KEY}&lat=${lat}&lon=${lon}&days=1&aqi=no&alerts=no`;
+  const url = `${BASE_URL}/forecast.json?key=${API_KEY}&lat=${lat}&lon=${lon}&days=1&aqi=no&alerts=no`;
   console.log("Fetching weather by coords from:", url);
   const response = await fetch(url);
   if (!response.ok) {
